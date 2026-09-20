@@ -1,4 +1,8 @@
 import { createContext } from "react";
+import { useContextGuard } from "../useContextGuard";
 
+export const ThemeContext = createContext(null);
 
-export const ThemeContext = createContext();
+export const useTheme = () => {
+  return useContextGuard(ThemeContext, "useTheme");
+};

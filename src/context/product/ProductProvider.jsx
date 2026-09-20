@@ -4,7 +4,6 @@ import { ProductContext } from "./ProductContext";
 const initialState = {
   products: [],
   cart: [],
-  totalPrice: 0,
   loading: false,
   error: null,
 };
@@ -19,16 +18,19 @@ const reducer = (state, action) => {
     case "SET_LOADING":
       return { ...state, loading: payload };
     case "ADD_CART": {
-      const isInclude = state.cart.some((item) => item.id === payload);
-      if (isInclude) {
+      const isIncluded = state.cart.some((item) => item.id === payload);
+      if (isIncluded) {
         const updatedCart = state.cart.map((item) =>
           item.id === payload ? { ...item, quantity: item.quantity + 1 } : item,
         );
         return { ...state, cart: updatedCart };
       }
       const product = state.products.find((item) => item.id === payload);
-      const cartProduct = { ...product, quantity: 1 };
-      return { ...state, cart: [...state.cart, cartProduct] };
+      if (product) {
+        const cartProduct = { ...product, quantity: 1 };
+        return { ...state, cart: [...state.cart, cartProduct] };
+      }
+      return state;
     }
     case "REMOVE_CART": {
       const isInclude = state.cart.some((item) => item.id === payload);
@@ -43,12 +45,6 @@ const reducer = (state, action) => {
         return { ...state, cart: updatedCart };
       }
       return state;
-    }
-    case "GET_TOTAL_PRICE": {
-      const total = state.cart.reduce((acc, item) => {
-        return acc + item.price * item.quantity;
-      }, 0);
-      return { ...state, totalPrice: total };
     }
     default:
       return state;
@@ -75,10 +71,6 @@ export const ProductProvider = ({ children }) => {
     };
     fetchingData();
   }, []);
-
-  useEffect(() => {
-    dispatch({ type: "GET_TOTAL_PRICE" });
-  }, [state.cart]);
 
   return (
     <ProductContext.Provider value={{ state, dispatch }}>

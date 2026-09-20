@@ -1,4 +1,4 @@
-import { useProduct } from "../context/product/useProduct";
+import { useProduct } from "../context/product/ProductContext";
 
 function ProductCard({ product }) {
   const { state, dispatch } = useProduct();

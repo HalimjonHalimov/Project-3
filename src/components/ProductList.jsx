@@ -1,5 +1,5 @@
 import ProductCard from "./ProductCard";
-import { useProduct } from "../context/product/useProduct";
+import { useProduct } from "../context/product/ProductContext";
 
 function ProductList() {
   const { state } = useProduct();

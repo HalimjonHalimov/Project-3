@@ -1,9 +1,12 @@
-import { useProduct } from "../context/product/useProduct";
-import { useTheme } from "../context/theme/useTheme";
+import { useProduct } from "../context/product/ProductContext";
+import { useTheme } from "../context/theme/ThemeContext";
 
 function Header() {
   const { state: theme, dispatch: themeDispatch } = useTheme();
   const { state } = useProduct();
+  const totalPrice = state.cart.reduce((acc, item) => {
+    return acc + item.price * item.quantity;
+  }, 0);
 
   return (
     <header className="navbar">
@@ -28,13 +31,13 @@ function Header() {
           </span>
           <span>
             <b>Cart</b>
-            {state.cart.length === 0 ? (
+            {totalPrice === 0 ? (
               <small>Your cart is empty</small>
             ) : (
               <small>{state.cart.length} products in your cart</small>
             )}
           </span>
-          <strong>${state.totalPrice.toFixed(2)}</strong>
+          <strong>${totalPrice.toFixed(2)}</strong>
         </div>
       </div>
     </header>
